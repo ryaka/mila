@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>{{ .Title }} - {{ .Site.Params.description }}</title>
+    {{ partial "head.html" . }}
+</head>
+
+<body>
+    <div class="container-fluid" id="wrapper">
+        {{ partial "header.html" . }}
+
+        <!-- hero container -->
+        {{$title := lower .Title}} {{if index .Site.Params.menu $title}} {{$hero := index .Site.Params.menu $title "hero"}}
+
+        <div class="hero-container" style="background-image: url({{ .Site.BaseURL }}/img/{{$hero}});">
+            {{else}}
+            <div class="hero-container" style="background-image: url();">
+                {{end}}
+                <div class="hero-overlay"></div>
+                <div class="hero-content">
+                    {{if index .Site.Params.menu $title}}
+                    <h1> {{index .Site.Params.menu $title "name"}} </h1>
+                    <h3> {{index .Site.Params.menu $title "description"}} </h3> {{end}}
+                </div>
+            </div>
+            <!-- end hero container -->
+
+
+            <!-- post post -->
+            <div class="row posts">
+                {{ range $index, $page := first 10 (.Data.Pages) }} {{ if mod $index 3 | eq 0 }}
+                <div class="clearfix visible-md visible-lg"></div>
+                {{ end }} {{ if mod $index 2 | eq 0 }}
+                <div class="clearfix visible-sm"></div>
+                {{ end }}
+                <article class="col-xs-12 col-sm-6 col-md-4 post">
+                    <div>
+                        <!-- image -->
+                        <a href="{{ $page.Permalink }}">
+                            <img class="post-img" src="{{ .Site.BaseURL }}/img/{{$page.Params.hero}}" />
+                        </a>
+                        <!-- end image -->
+
+                        <!-- summary -->
+                        <div class="post-meta">
+                            <a class="post-title" href="{{ $page.Permalink }}">
+                                <h3>{{.Title}}</h3>
+                            </a>
+                            <p class="post-description">{{$page.Params.description}}</p>
+                        </div>
+                        <!-- end summary -->
+                    </div>
+                </article>
+                {{ end }}
+            </div>
+            <!-- end post post -->
+        </div>
+        {{ partial "footer.html" . }}
+    </div>
+    {{ partial "scripts.html" . }}
+</body>
+
+</html>

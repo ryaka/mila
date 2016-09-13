@@ -1,0 +1,107 @@
+.navbar {
+    padding: 5vh 5vw;
+    border: none;
+    border-radius: 0;
+    background-color: rgba(255,255,255,0.0);
+    z-index: 20;
+    width: 100%;
+    position: absolute;
+}
+
+.navbar-default .navbar-nav>li>a {
+    color: #fff;
+    text-transform: capitalize;
+}
+
+.navbar-default .navbar-brand {
+    color: #fff;
+}
+
+.container-fluid {
+    margin: 0;
+    padding: 0;
+}
+
+.hero-container-full {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    background-position: center;
+    overflow: hidden;
+}
+
+.hero-container {
+    position: relative;
+    width: 100vw;
+    height: 85vh;
+    background-position: center;
+    overflow: hidden;
+}
+
+.hero-overlay {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    background: #252b33;
+    opacity: 0.6;
+}
+
+.hero-content {
+    color: #fff;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    text-align: center;
+    transform: translate(-50%, -50%);
+}
+
+.content-container {
+    padding: 3%;
+}
+
+.content {
+    padding: 3%;
+}
+
+.posts {
+    padding-top: 25px;
+    margin: auto;
+}
+
+.post {
+    border: 20px solid #fff;
+    padding: 0;
+    background-color:#fff;
+    overflow:hidden;
+}
+
+.post-img {
+    overflow: hidden;
+    width: 100%;
+    position: relative;
+    background-position: center;
+    overflow: hidden;
+}
+
+.post-meta {
+    padding-top: 25px;
+}
+
+.post-title {
+    text-align: center;
+}
+
+.post-description {
+    text-align: center;
+    padding: 25px;
+}
+
+.footer {
+    color: white;
+    position: relative;
+    width: 100vw;
+    padding: 30px;
+    background-position: center;
+    background-color: rgb(37,43,51);
+    overflow: hidden;
+}

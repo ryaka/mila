@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>{{ .Title }} - {{ .Site.Params.description }}</title>
+    {{ partial "head.html" . }}
+</head>
+
+<body>
+    <div class="container-fluid">
+        {{ partial "header.html" . }}
+        <!-- hero container -->
+        <div class="hero-container-full" style="background-image: url(../img/bear.jpg);">
+            <div class="hero-overlay"></div>
+            <div class="hero-content">
+                <h1> {{.Site.Title}} </h1>
+                <h3> This is the Mila theme and I hope it will be very cutey patootie ootie booty </h3>
+            </div>
+        </div>
+        <!-- end hero container -->
+    </div>
+
+    {{ partial "scripts.html" . }}
+</body>
+
+</html>
