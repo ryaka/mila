@@ -1,5 +1,55 @@
+body {
+    font-family: 'Archivo Black', sans-serif;
+    font-weight: 500;
+    line-height: 2em;
+    letter-spacing: 0.065em;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Ramabhadra', sans-serif;
+    letter-spacing: .15em;
+    text-transform: uppercase;
+}
+
+a {
+    text-decoration: none !important;
+}
+
+article {
+    font-size: 1.25em;
+}
+
+article h1, article h2, article h3, article h4, article h5, article h6 {
+    letter-spacing: 0em;
+}
+
+article h1 {
+    font-size: 1.5em;
+}
+
+article h2 {
+    font-size: 1.17em;
+}
+
+article h3 {
+    font-size: 1em;
+}
+
+article h4 {
+    font-size: .83em;
+}
+
+article h5 {
+    font-size: .67em;
+}
+
+/* single content style */
+
+/* end single content style */
+
 /* bootstrap override */
 .navbar {
+    font-family: 'Ramabhadra', sans-serif;
     padding: 5vh 5vw;
     border: none;
     border-radius: 0;
@@ -71,6 +121,7 @@
 figure {
     vertical-align: middle;
     text-align: center;
+    margin: 4% 0%;
 }
 
 figure img {

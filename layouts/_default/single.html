@@ -11,11 +11,11 @@
         {{ partial "header.html" . }}
 
         <!-- hero container -->
-        <div class="hero-container" style="background-image: url({{ .Site.BaseURL }}/img/{{.Params.hero}});">
+        <div class="hero-container" style="background-image: url({{ .Site.BaseURL }}img/{{.Params.hero}});">
             <div class="hero-overlay"></div>
             <div class="hero-content">
                 <h1> {{.Title}} </h1>
-                <h3> {{.Description}} </h3>
+                <h4> {{.Description}} </h4>
             </div>
         </div>
         <!-- end hero container -->

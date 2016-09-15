@@ -21,7 +21,7 @@
                 <div class="hero-content">
                     {{if index .Site.Params.menu $title}}
                     <h1> {{index .Site.Params.menu $title "name"}} </h1>
-                    <h3> {{index .Site.Params.menu $title "description"}} </h3> {{end}}
+                    <h4> {{index .Site.Params.menu $title "description"}} </h4> {{end}}
                 </div>
             </div>
             <!-- end hero container -->
@@ -38,14 +38,14 @@
                     <div>
                         <!-- image -->
                         <a href="{{ $page.Permalink }}">
-                            <img class="post-img" src="{{ .Site.BaseURL }}/img/{{$page.Params.hero}}" />
+                            <img class="post-img" src="{{ .Site.BaseURL }}img/{{$page.Params.hero}}" />
                         </a>
                         <!-- end image -->
 
                         <!-- summary -->
                         <div class="post-meta">
                             <a class="post-title" href="{{ $page.Permalink }}">
-                                <h3>{{.Title}}</h3>
+                                <h2>{{.Title}}</h2>
                             </a>
                             <p class="post-description">{{$page.Params.description}}</p>
                         </div>

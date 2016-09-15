@@ -10,7 +10,7 @@
     <div class="container-fluid">
         {{ partial "header.html" . }}
         <!-- hero container -->
-        <div class="hero-container-full" style="background-image: url(../img/bear.jpg);">
+        <div class="hero-container-full" style="background-image: url({{ .Site.BaseURL }}/img/{{.Site.Params.hero}});">
             <div class="hero-overlay"></div>
             <div class="hero-content">
                 <h1> {{.Site.Title}} </h1>
