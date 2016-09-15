@@ -177,3 +177,7 @@ figure img {
     background-color: rgb(37,43,51);
     overflow: hidden;
 }
+
+.footer a {
+    color: white;
+}
