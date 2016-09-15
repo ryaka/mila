@@ -58,6 +58,11 @@ article h5 {
     position: absolute;
 }
 
+.navbar-toggle.navbar-left {
+  float: left;
+  margin-left: 10px;
+}
+
 .navbar-default .navbar-nav>li>a {
     color: #fff;
     text-transform: capitalize;
