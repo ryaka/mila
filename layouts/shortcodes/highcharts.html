@@ -1,0 +1,17 @@
+{{ $id := .Get "id" }} {{ $src := .Get "src" }}
+
+<figure id="{{$id}}" class="highcharts"></figure>
+
+<script type="text/javascript">
+    $(function() {
+        $.getJSON('{{$src}}', function(data) {
+            data.chart = data.chart || {};
+            data.chart.renderTo = "{{$id}}";
+            data.credits = {
+                text: 'Source',
+                href: '{{$src}}'
+            }
+            new Highcharts.Chart(data);
+        });
+    })
+</script>
