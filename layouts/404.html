@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>{{ .Title }} - {{ .Site.Params.description }}</title>
+    {{ partial "head.html" . }}
+</head>
+
+<body>
+    <div class="container-fluid">
+        {{ partial "header.html" . }}
+        <!-- hero container -->
+
+        {{if isset .Site.Params "nf404"}} {{$hero := index .Site.Params.nf404 "hero"}}
+        <div class="hero-container-full" style="background-image: url({{ .Site.BaseURL }}/img/{{$hero}});">
+            {{else}}
+            <div class="hero-container-full" style="background-image: url();">
+                {{end}}
+                <div class="hero-overlay"></div>
+                <div class="hero-content">
+                    {{if isset .Site.Params "nf404"}}
+                    <h1> {{index .Site.Params.nf404 "name"}} </h1>
+                    <h3> {{index .Site.Params.nf404 "description"}} </h3> {{else}}
+                    <h1> 404 </h1>
+                    <h3> Page not found </h3> {{end}}
+                </div>
+            </div>
+            <!-- end hero container -->
+        </div>
+
+        {{ partial "scripts.html" . }}
+</body>
+
+</html>
