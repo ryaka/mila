@@ -43,10 +43,6 @@ article h5 {
     font-size: .67em;
 }
 
-/* single content style */
-
-/* end single content style */
-
 /* bootstrap override */
 .navbar {
     font-family: 'Ramabhadra', sans-serif;
@@ -139,13 +135,28 @@ article h5 {
   margin: 1.5em 0;
 }
 
-figure {
+.content blockquote p {
+    font-style: italic;
+    vertical-align: middle;
+    margin: 0 auto;
+}
+
+.content blockquote p:before {
+    content: open-quote;
+}
+
+.content blockquote p:after {
+    content: close-quote;
+}
+
+.content figure, .content blockquote {
+    border-width: 0px;
     vertical-align: middle;
     text-align: center;
     margin: 4% 0%;
 }
 
-figure img {
+.content figure img {
     width: 100%;
 }
 /* end default content rendering for single */
