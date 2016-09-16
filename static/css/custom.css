@@ -135,6 +135,10 @@ article h5 {
     text-transform: none;
 }
 
+.content p {
+  margin: 1.5em 0;
+}
+
 figure {
     vertical-align: middle;
     text-align: center;
