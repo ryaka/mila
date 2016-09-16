@@ -20,9 +20,9 @@
                 <div class="hero-content">
                     {{if isset .Site.Params "nf404"}}
                     <h1> {{index .Site.Params.nf404 "name"}} </h1>
-                    <h3> {{index .Site.Params.nf404 "description"}} </h3> {{else}}
+                    <h4> {{index .Site.Params.nf404 "description"}} </h4> {{else}}
                     <h1> 404 </h1>
-                    <h3> Page not found </h3> {{end}}
+                    <h4> Page not found </h4> {{end}}
                 </div>
             </div>
             <!-- end hero container -->
