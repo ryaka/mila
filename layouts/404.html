@@ -12,7 +12,7 @@
         <!-- hero container -->
 
         {{if isset .Site.Params "nf404"}} {{$hero := index .Site.Params.nf404 "hero"}}
-        <div class="hero-container-full" style="background-image: url({{ .Site.BaseURL }}/img/{{$hero}});">
+        <div class="hero-container-full" style="background-image: url({{$hero}});">
             {{else}}
             <div class="hero-container-full" style="background-image: url();">
                 {{end}}

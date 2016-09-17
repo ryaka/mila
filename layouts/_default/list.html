@@ -13,7 +13,7 @@
         <!-- hero container -->
         {{$title := lower .Title}} {{if index .Site.Params.menu $title}} {{$hero := index .Site.Params.menu $title "hero"}}
 
-        <div class="hero-container" style="background-image: url({{ .Site.BaseURL }}/img/{{$hero}});">
+        <div class="hero-container" style="background-image: url({{$hero}});">
             {{else}}
             <div class="hero-container" style="background-image: url();">
                 {{end}}
@@ -38,7 +38,7 @@
                     <div>
                         <!-- image -->
                         <a href="{{ $page.Permalink }}">
-                            <img class="post-img" src="{{ .Site.BaseURL }}/img/{{$page.Params.hero}}" />
+                            <img class="post-img" src="{{$page.Params.hero}}" />
                         </a>
                         <!-- end image -->
 
