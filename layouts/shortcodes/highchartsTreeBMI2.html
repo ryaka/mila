@@ -1,0 +1,192 @@
+{{ $id := .Get "id" }} {{ $src := .Get "src" }} {{ $metasrc := .Get "metasrc" }} {{ $grouping := .Get "grouping" }} {{ $title := .Get "title" }}
+
+<figure id="{{$id}}" class="highcharts"></figure>
+
+<script type="text/javascript">
+    $(function() {
+        function formatData(data, metadata) {
+          var countryLabels = data.geographies[0].features;
+
+          // Retrieve the region the country belongs in from 'filters' array
+          var countries = countryLabels.map(function(c) {
+            var countryMetaInfo = metadata[c.id];
+            if (!countryMetaInfo) {
+              countryMetaInfo = {};
+            }
+            if (countryMetaInfo.region === 'Not classified') {
+              countryMetaInfo.region = undefined;
+            }
+            if (countryMetaInfo.income === 'Not classified') {
+              countryMetaInfo.income = undefined;
+            }
+            return {
+              id: c.id,
+              name: c.name,
+              whoRegion: c.filters[0].name,
+              wbRegion: countryMetaInfo.region,
+              income: countryMetaInfo.income,
+              data: {}
+            };
+          });
+
+          // Merge the data together so each country object contains all of its own data
+          var countryData = data.geographies[0].themes[0].indicators;
+          countries.forEach(function(c, index) {
+            var mergedDataSet = c.data;
+            countryData.forEach(function(dataSet) {
+              var date = dataSet.date;
+              var gender = dataSet.name;
+
+              mergedDataSet[date] = mergedDataSet[date] || {};
+              mergedDataSet[date][gender] = dataSet.values[index];
+            });
+          });
+
+          // Calculate gender differences
+          countries = countries.map(function(c) {
+            var genderDiff = c.data['2014']['Male'] - c.data['2014']['Female'];
+            genderDiff = Number(genderDiff.toFixed(1));
+            return Object.assign({}, c, {
+              value: genderDiff
+            });
+          })
+
+          return countries;
+        }
+
+        var promises = [
+            $.getJSON('{{$metasrc}}'),
+            $.getJSON('{{$src}}')
+        ];
+
+        Promise.all(promises).then(function(dataSets) {
+          var metadata = dataSets[0];
+          var data = dataSets[1];
+
+          data.credits = {
+              text: 'Source',
+              href: '{{$src}}'
+          }
+
+          var countries = formatData(data, metadata);
+
+          var points = [];
+          var groups = {};
+          var grouping = '{{$grouping}}';
+
+          var countryPMap = {};
+
+          // Loop through all countries
+          countries.forEach(function(country, index) {
+            // Don't graph countries that are not grouped because it
+            // potentially makes the chart look misleading with the size.
+            if (!country[grouping]) {
+              return;
+            }
+            // If grouping not yet recorded, create a point for it
+            if (!(country[grouping] in groups)) {
+              var id = Object.keys(groups).length;
+              groups[country[grouping]] = {
+                id: 'id_' + id,
+                name: country[grouping],
+                genderPoints: 0,
+                value: 0
+              };
+            }
+
+            var group = groups[country[grouping]];
+            // Create a point for the country
+            var countryP = {
+                id: group.id + '_' + index,
+                name: country.name + ' ' + country.value,
+                parent: group.id,
+                value: Math.abs(country.value),
+                colorValue: country.value
+            };
+
+            countryPMap[countryP.name] = country;
+
+            if (!isNaN(country.value)) {
+              group.value += country.value;
+              group.genderPoints += 1;
+            }
+
+            points.push(countryP);
+          });
+
+          // Normalize out the groups average BMI by dividing the net
+          // BMI points by the number of gender measurements used
+          var groupPs = Object.keys(groups).map(function(r) {
+            var group = groups[r];
+            var groupValue = group.value / (group.genderPoints);
+            // Round to 1 digit
+            groupValue = Number(groupValue.toFixed(1));
+            var groupName = group.name + ' ' + groupValue;
+
+            return Object.assign({}, groups[r], {
+              name: groupName,
+              colorValue: groupValue,
+              value: Math.abs(groupValue)
+            });
+          });
+          points.push.apply(points, groupPs);
+
+          $('#{{$id}}').highcharts({
+              tooltip: {
+                enabled: true,
+                formatter: function() {
+                  var country = countryPMap[this.key];
+                  if (country) {
+                    var male = country.data['2014']['Male'];
+                    var female = country.data['2014']['Female'];
+                    return '' +
+                    '<div>' +
+                      '<p>' + this.key.substring(0, this.key.lastIndexOf(' ')) + '</p>' +
+                      '<br>' +
+                      '<p>Male: ' + male + '</p>' +
+                      '<br>' +
+                      '<p>Female: ' + female + '</p>' +
+                    '</div>';
+                  }
+                  return this.key;
+                }
+              },
+              colorAxis: {
+                  description: 'BMI Classifications',
+                  tickPositions: [-5, 0, 5],
+                  stops: [
+                      [0, '#ff0000'],
+                      [0.5, '#ffffff'],
+                      [1, '#0000ff']
+                  ]
+              },
+              series: [{
+                  type: 'treemap',
+                  layoutAlgorithm: 'squarified',
+                  allowDrillToNode: true,
+                  animationLimit: 1000,
+                  dataLabels: {
+                      enabled: false
+                  },
+                  levelIsConstant: false,
+                  levels: [
+                    {
+                      level: 1,
+                      dataLabels: {
+                          enabled: true
+                      },
+                      borderWidth: 3
+                    }
+                  ],
+                  data: points
+              }],
+              subtitle: {
+                  text: 'Click points to drill down. Source: <a href="http://apps.who.int/gho/data/node.main.12?lang=en">WHO</a>.'
+              },
+              title: {
+                  text: '{{$title}}'
+              }
+          });
+        });
+    })
+</script>

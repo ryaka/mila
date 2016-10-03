@@ -1,0 +1,124 @@
+{{ $id := .Get "id" }} {{ $src := .Get "src" }} {{ $title := .Get "title" }}
+
+<figure id="{{$id}}" class="highcharts"></figure>
+
+<script type="text/javascript">
+    $(function() {
+        function formatData(data) {
+          var countryLabels = data.geographies[0].features;
+
+          // Retrieve the region the country belongs in from 'filters' array
+          var countries = countryLabels.map(function(c) {
+            return {
+              id: c.id,
+              name: c.name,
+              region: c.filters[0].name,
+              data: {}
+            };
+          });
+
+          // Merge the data together so each country object contains its own data
+          var countryData = data.geographies[0].themes[0].indicators;
+          countries.forEach(function(c, index) {
+            var mergedDataSet = c.data;
+            countryData.forEach(function(dataSet) {
+              var date = dataSet.date;
+              var gender = dataSet.name;
+
+              mergedDataSet[date] = mergedDataSet[date] || {};
+              mergedDataSet[date][gender] = dataSet.values[index];
+            });
+          });
+
+          // Code from above was lazily copy and pasted from Tree chart. We only
+          // need a subset of data so just take those.
+          return countries.map(function(c) {
+            return {
+              code: c.id,
+              name: c.name,
+              value: (c.data['2014']['Male'] - c.data['2014']['Female']).toFixed(1),
+              male: c.data['2014']['Male'],
+              female: c.data['2014']['Female']
+            };
+          });
+        }
+
+
+        $.getJSON('{{$src}}', function(data) {
+            data.credits = {
+                text: 'Source',
+                href: '{{$src}}'
+            }
+
+            var countries = formatData(data);
+
+            var countriesMap = {};
+            countries.forEach(function(c) {
+              countriesMap[c.code] = c;
+            });
+
+            // Initiate the chart
+            $('#{{$id}}').highcharts('Map', {
+                title: {
+                    text: '{{$title}}'
+                },
+
+                mapNavigation: {
+                    enabled: true,
+                    buttonOptions: {
+                        verticalAlign: 'bottom'
+                    }
+                },
+
+                tooltip: {
+                    backgroundColor: 'none',
+                    borderWidth: 0,
+                    shadow: false,
+                    useHTML: true,
+                    padding: 0,
+                    formatter: function() {
+                      var country = countriesMap[this.point.code];
+                      console.log(this.point.code, country);
+                      if (country) {
+                        var both = country.value;
+                        var male = country.male;
+                        var female = country.female;
+                        return '' +
+                        '<div>' +
+                          '<p>' + this.key + ': ' + both + ' ' + '</p>' +
+                          '<p>' +
+                            'Male: ' + male + ' ' +
+                            'Female: ' + female + ' ' +
+                          '</p>' +
+                        '</div>';
+                      }
+                      return this.key;
+                    },
+                    positioner: function () {
+                        return { x: 0, y: 250 };
+                    }
+                },
+                colorAxis: {
+                    description: 'BMI Classifications',
+                    tickPositions: [-5, 0, 5],
+                    stops: [
+                        [0, '#ff0000'],
+                        [0.5, '#ffffff'],
+                        [1, '#0000ff']
+                    ]
+                },
+                series: [{
+                    data: countries,
+                    mapData: Highcharts.maps['custom/world'],
+                    joinBy: ['iso-a3', 'code'],
+                    name: 'Mean BMI',
+                    states: {
+                        hover: {
+                            color: '#BADA55'
+                        }
+                    }
+                }]
+            });
+        });
+    })
+</script>

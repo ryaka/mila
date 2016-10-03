@@ -1,0 +1,129 @@
+{{ $id := .Get "id" }} {{ $src := .Get "src" }} {{ $title := .Get "title" }}
+
+<figure id="{{$id}}" class="highcharts"></figure>
+
+<script type="text/javascript">
+    $(function() {
+        function formatData(data) {
+          var countryLabels = data.geographies[0].features;
+
+          // Retrieve the region the country belongs in from 'filters' array
+          var countries = countryLabels.map(function(c) {
+            return {
+              id: c.id,
+              name: c.name,
+              region: c.filters[0].name,
+              data: {}
+            };
+          });
+
+          // Merge the data together so each country object contains its own data
+          var countryData = data.geographies[0].themes[0].indicators;
+          countries.forEach(function(c, index) {
+            var mergedDataSet = c.data;
+            countryData.forEach(function(dataSet) {
+              var date = dataSet.date;
+              var gender = dataSet.name;
+
+              mergedDataSet[date] = mergedDataSet[date] || {};
+              mergedDataSet[date][gender] = dataSet.values[index];
+            });
+          });
+
+          // Code from above was lazily copy and pasted from Tree chart. We only
+          // need a subset of data so just take those.
+          return countries.map(function(c) {
+            return {
+              code: c.id,
+              name: c.name,
+              value: c.data['2014']['Both sexes'],
+              male: c.data['2014']['Male'],
+              female: c.data['2014']['Female']
+            };
+          });
+        }
+
+
+        $.getJSON('{{$src}}', function(data) {
+            data.credits = {
+                text: 'Source',
+                href: '{{$src}}'
+            }
+
+            var countries = formatData(data);
+
+            var countriesMap = {};
+            countries.forEach(function(c) {
+              countriesMap[c.code] = c;
+            });
+
+            // Initiate the chart
+            $('#{{$id}}').highcharts('Map', {
+                title: {
+                    text: '{{$title}}'
+                },
+
+                mapNavigation: {
+                    enabled: true,
+                    buttonOptions: {
+                        verticalAlign: 'bottom'
+                    }
+                },
+
+                tooltip: {
+                    backgroundColor: 'none',
+                    borderWidth: 0,
+                    shadow: false,
+                    useHTML: true,
+                    padding: 0,
+                    formatter: function() {
+                      var country = countriesMap[this.point.code];
+                      if (country) {
+                        var both = country.value;
+                        var male = country.male;
+                        var female = country.female;
+                        return '' +
+                        '<div>' +
+                          '<p>' + this.key + ': ' + both + ' ' + '</p>' +
+                          '<p>' +
+                            'Male: ' + male + ' ' +
+                            'Female: ' + female + ' ' +
+                          '</p>' +
+                        '</div>';
+                      }
+                      return this.key;
+                    },
+                    // pointFormat: '' +
+                    //     ' {point.name}: <b>{point.value}</b>',
+                    positioner: function () {
+                        return { x: 0, y: 250 };
+                    }
+                },
+                colorAxis: {
+                    description: 'BMI Classifications',
+                    tickPositions: [16, 18.5, 25, 30, 32],
+                    stops: [
+                      [0, '#500368'],
+                      [0.155, '#ac43cc'],
+                      [0.155, '#4395cc'],
+                      [0.565, '#1cdb2f'],
+                      [0.565, '#d1a934'],
+                      [0.875, '#db1c1c'],
+                      [1.0, '#000000']
+                    ]
+                },
+                series: [{
+                    data: countries,
+                    mapData: Highcharts.maps['custom/world'],
+                    joinBy: ['iso-a3', 'code'],
+                    name: 'Mean BMI',
+                    states: {
+                        hover: {
+                            color: '#BADA55'
+                        }
+                    }
+                }]
+            });
+        });
+    })
+</script>
