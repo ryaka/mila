@@ -77,7 +77,6 @@
           var grouping = '{{$grouping}}';
 
           var countryPMap = {};
-          var groupMap = {}
 
           // Loop through all countries
           countries.forEach(function(country, index) {
@@ -86,11 +85,6 @@
             if (!country[grouping]) {
               return;
             }
-
-            if (!(country[grouping] in groupMap)) {
-              groupMap[country[grouping]] = [];
-            }
-            groupMap[country[grouping]].push(country);
 
             // If grouping not yet recorded, create a point for it
             if (!(country[grouping] in groups)) {
@@ -122,19 +116,6 @@
 
             points.push(countryP);
           });
-
-          for (var group in groupMap) {
-            groupMap[group] = groupMap[group].filter(function(c) {return !isNaN(c.value);})
-            groupMap[group].sort(function(a, b) {
-              return a.value - b.value;
-            });
-            var members = groupMap[group].length
-            console.log(group,
-              groupMap[group][Math.round(members/4)].value,
-              groupMap[group][Math.round(members/2)].value,
-              groupMap[group][Math.round(members * .75)].value
-            )
-          }
 
           // Normalize out the groups average BMI by dividing the net
           // BMI points by the number of gender measurements used
@@ -202,7 +183,9 @@
                   data: points
               }],
               subtitle: {
-                  text: 'Click points to drill down. Source: <a href="http://apps.who.int/gho/data/node.main.12?lang=en">WHO</a>.'
+                  text: 'Click to drill down. <br> Source: ' +
+                  '<a href="http://apps.who.int/gho/data/view.main.12461?lang=en">WHO</a>' +
+                  ' and <a href="http://databank.worldbank.org/data/download/site-content/OGHIST.xls">World Bank</a>.'
               },
               title: {
                   text: '{{$title}}'
