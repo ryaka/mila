@@ -95,7 +95,6 @@
                 colorValue: country.data['2014']['Both sexes']
             };
 
-            console.log(countryP.name);
             countryPMap[countryP.name] = country;
 
             points.push(countryP);
@@ -145,9 +144,7 @@
               tooltip: {
                 enabled: true,
                 formatter: function() {
-                  console.log(this.key);
                   var country = countryPMap[this.key];
-                  console.log(country);
                   if (country) {
                     return country.name + ' ' + country.data['2014']['Both sexes'];
                   }
