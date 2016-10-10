@@ -67,6 +67,13 @@
 
           var countryPMap = {};
 
+          // There seems to be a strange bug where highcharts is not sorting
+          // the values correctly. Presorting the countries before iterating
+          // through seems to fix this issue...somehow.
+          countries = countries.sort(function(a, b) {
+            return a.data['2014']['Both sexes'] - b.data['2014']['Both sexes'];
+          });
+
           // Loop through all countries
           countries.forEach(function(country, index) {
             // Don't graph countries that are not grouped because it
