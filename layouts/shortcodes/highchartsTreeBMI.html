@@ -65,6 +65,8 @@
           var groups = {};
           var grouping = '{{$grouping}}';
 
+          var countryPMap = {};
+
           // Loop through all countries
           countries.forEach(function(country, index) {
             // Don't graph countries that are not grouped because it
@@ -87,11 +89,14 @@
             // Create a point for the country
             var countryP = {
                 id: group.id + '_' + index,
-                name: country.name + ' ' + country.data['2014']['Both sexes'],
+                name: country.id + ' ' + country.data['2014']['Both sexes'],
                 parent: group.id,
                 value: country.data['2014']['Both sexes'],
                 colorValue: country.data['2014']['Both sexes']
             };
+
+            console.log(countryP.name);
+            countryPMap[countryP.name] = country;
 
             points.push(countryP);
 
@@ -140,6 +145,13 @@
               tooltip: {
                 enabled: true,
                 formatter: function() {
+                  console.log(this.key);
+                  var country = countryPMap[this.key];
+                  console.log(country);
+                  if (country) {
+                    return country.name + ' ' + country.data['2014']['Both sexes'];
+                  }
+
                   return this.key;
                 }
               },
